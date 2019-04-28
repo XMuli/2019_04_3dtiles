@@ -1,1 +1,0 @@
-{"rustc":8617792432618773455,"features":"[]","target":10053653605214171594,"profile":2574335274271406459,"path":99586428252075471,"deps":[["unicode-width v0.1.5 (registry `https://mirrors.ustc.edu.cn/crates.io-index/`)","unicode_width",3259051868665860697]],"local":[{"Precalculated":"0.11.0"}],"rustflags":[],"edition":"Edition2015"}

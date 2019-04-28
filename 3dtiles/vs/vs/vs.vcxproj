@@ -103,6 +103,7 @@
     <ClInclude Include="..\..\src\gdal\thinplatespline.h" />
     <ClInclude Include="..\..\src\gdal\vrtdataset.h" />
     <ClInclude Include="..\..\src\json.hpp" />
+    <ClInclude Include="..\..\src\MY_QT_JSON.h" />
     <ClInclude Include="..\..\src\stb_image.h" />
     <ClInclude Include="..\..\src\stb_image_write.h" />
     <ClInclude Include="..\..\src\tiny_gltf.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="..\..\src\decompress.cpp" />
     <ClCompile Include="..\..\src\dxt_img.cpp" />
     <ClCompile Include="..\..\src\make_gltf.cpp" />
+    <ClCompile Include="..\..\src\MY_QT_JSON.cpp" />
     <ClCompile Include="..\..\src\osgb23dtile.cpp" />
     <ClCompile Include="..\..\src\shp23dtile.cpp" />
     <ClCompile Include="..\..\src\tileset.cpp" />
@@ -240,12 +242,15 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>D:\programming\DataDas\3dtiles\src;C:\Qt\Qt5.9.7\5.9.7\msvc2015_64\include;C:\Qt\Qt5.9.7\5.9.7\msvc2015_64\include\QtCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Qt\Qt5.9.7\5.9.7\msvc2015_64\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Qt5Core.dll;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>cd ../../ &amp; cargo build --release</Command>

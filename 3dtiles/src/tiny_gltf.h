@@ -44,6 +44,8 @@
 #include <vector>
 #include <array>
 
+#include "MY_QT_JSON.h"
+
 namespace tinygltf {
 
 #define TINYGLTF_MODE_POINTS (0)
@@ -4039,11 +4041,68 @@ std::string TinyGLTF::Serialize(Model *model) {
       json light;
       SerializeGltfLight(model->lights[i], light);
       lights.push_back(light);
-    }
-    output["lights"] = lights;
+	}
+	output["lights"] = lights;
   }
 
   std::string json_out = output.dump();
+
+
+  //修改时间:2019-04-22  16:11
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //这一段保存未修改josn的数据
+  //printf("111-----------------------------------\n");
+
+  //ofstream fFile;
+  //ofstream fFile2;
+
+  //fFile.open("../../json/json_out.json", ios::binary | ios::trunc | ios::in | ios::out);
+  //fFile2.open("../../json/json_out2.json", ios::binary | ios::app | ios::in | ios::out);
+
+  //string strModify = json_out;
+  //string strModify2 = json_out;
+
+  //fFile << strModify << endl;
+  //fFile2 << strModify2 << endl;
+
+  //fFile.close();
+  //fFile2.close();
+
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //将即将写入.b3dm的前面的json代码进行格式的修改
+
+  //接口一：（不推荐）  通过文本写入，再读取，进行修改，速度慢了，且要使用的话，上下写入文件的代码也要同步打开
+  //MY_QT_JSON myQtJson;
+  //myQtJson.myQtJsonModify();
+  //myQtJson.myJsonOutStr(json_out);
+
+
+  //接口二：（推荐）   直接通过string来接收，修改，转出，  无需通过.txt来保存读写，上下的测试代码也无需打开
+  MY_QT_JSON myQtJson(json_out);
+  myQtJson.myQtJsonModify();
+  myQtJson.myJsonOutStr(json_out);
+  //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  //这一段保存已修改josn的数据(和上面未修改作对比)
+  //printf("baocun-----------------------------------\n");
+  //ofstream fFile3;
+  //ofstream fFile4;
+
+  //fFile3.open("../../json/json_out3.json", ios::binary | ios::trunc | ios::in | ios::out);
+  //fFile4.open("../../json/json_out4.json", ios::binary | ios::app | ios::in | ios::out);
+
+  //string strModify3 = json_out;
+  //string strModify4 = json_out;
+
+  //fFile3 << strModify3 << endl;
+  //fFile4 << strModify4 << endl;
+
+  //fFile3.close();
+  //fFile4.close();
+
+  //printf("222-----------------------------------\n");
+
+
+
   while (json_out.size() % 4 != 0) {
     json_out.push_back(0x20);
   }

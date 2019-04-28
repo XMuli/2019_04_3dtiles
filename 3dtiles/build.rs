@@ -14,11 +14,13 @@ fn build_win_msvc() {
         .define("_WINDOWS",None)
         .include("./src")
         .include("./src/osg")
+		.include("./src/qt/include")
         .file("./src/tileset.cpp")
         .file("./src/shp23dtile.cpp")
         .file("./src/osgb23dtile.cpp")
         .file("./src/dxt_img.cpp")
         .file("./src/make_gltf.cpp")
+		.file("./src/MY_QT_JSON.cpp")
         .compile("3dtile");
     // -------------
     println!("cargo:rustc-link-search=native=./lib");
@@ -28,6 +30,7 @@ fn build_win_msvc() {
     println!("cargo:rustc-link-lib=osgDB");
     println!("cargo:rustc-link-lib=osgUtil");
     println!("cargo:rustc-link-lib=osgViewer");
+	println!("cargo:rustc-link-lib=Qt5Core");
 
     Command::new("cmd")
         .args(

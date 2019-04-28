@@ -6,7 +6,7 @@
 
  下载master  分支  时间于:2019-04 -22   将其作为基础版本，进行修改和相关的需求的更改和优化
 
-<img src="https://github.com/touwoyimuli/2019_04_3dties/blob/master/images/1.png"  height="300" width="400">
+<img src="https://github.com/touwoyimuli/2019_04_3dtiles/blob/master/images/1.png"  height="300" width="400">
 
 ------
 
@@ -33,7 +33,7 @@ RuntimeError: Unsupported glTF Extension: KHR_technique_webgl
 
 修改规则参考如下代码：
 
-```json
+```js
 var fixGltf = function(gltf) {
     if (!gltf.extensionsUsed) {
         return;
@@ -138,7 +138,7 @@ git clone https://github.com/fanvanzh/3dtiles.git
 
 
 
-==配置所需要额qt依赖==，版本为qt 5.9.7 MSVC 2015版本(因为的修改使用到了qt的模块库)
+==**配置所需要额qt依赖**==，版本为qt 5.9.7 MSVC 2015版本(因为的修改使用到了qt的模块库)
 
 将`msvc2015_64`文件夹，放到`C:\Qt\Qt5.9.7\5.9.7\`下面即可.
 
