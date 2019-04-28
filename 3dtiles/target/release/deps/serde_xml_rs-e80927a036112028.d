@@ -1,0 +1,10 @@
+D:\programming\github\2019_04_3dtiles\code\3dtiles\target\release\deps\libserde_xml_rs-e80927a036112028.rlib: C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\lib.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\error.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\map.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\seq.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\var.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\serialize.rs
+
+D:\programming\github\2019_04_3dtiles\code\3dtiles\target\release\deps\serde_xml_rs-e80927a036112028.d: C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\lib.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\error.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\map.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\seq.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\var.rs C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\serialize.rs
+
+C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\lib.rs:
+C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\error.rs:
+C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\map.rs:
+C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\seq.rs:
+C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\var.rs:
+C:\Users\yuanyi\.cargo\registry\src\mirrors.ustc.edu.cn-b63e9dae659fc205\serde-xml-rs-0.2.1\src\serialize.rs:

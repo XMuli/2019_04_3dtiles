@@ -1,0 +1,1 @@
+{"rustc":8617792432618773455,"features":"[\"default\", \"proc-macro\", \"proc-macro2\"]","target":12227438739388876207,"profile":2574335274271406459,"path":12327747974927975927,"deps":[["proc-macro2 v0.4.28 (registry `https://mirrors.ustc.edu.cn/crates.io-index/`)","proc_macro2",7044381171585246669]],"local":[{"Precalculated":"0.6.12"}],"rustflags":[],"edition":"Edition2015"}
