@@ -61,6 +61,15 @@ fn main() {
                 .takes_value(true),
         )
         .arg(
+            Arg::with_name("inputXML")
+                .short("x")
+                .long("inputXML")
+                .value_name("FILE")
+                .help("Set the input xml file")
+                .required(true)           //指示参数是可选的还是必需的
+                .takes_value(true),       //从--option=foo类似的参数读取值
+        )
+        .arg(
             Arg::with_name("output")
                 .short("o")
                 .long("output")
@@ -109,6 +118,7 @@ fn main() {
         .get_matches();
 
     let input = matches.value_of("input").unwrap();
+    let inputXML = matches.value_of("inputXML").unwrap();
     let output = matches.value_of("output").unwrap();
     let format = matches.value_of("format").unwrap();
     let tile_config = matches.value_of("config").unwrap_or("");
@@ -117,14 +127,22 @@ fn main() {
     if matches.is_present("verbose") {
         info!("set program versose on");
     }
+
     let in_path = std::path::Path::new(input);
     if !in_path.exists() {
         error!("{} does not exists.", input);
         return;
     }
+
+    let inXML_path = std::path::Path::new(inputXML);
+    if !inXML_path.exists() {
+        error!("{} does not exists.", inputXML);
+        return;
+    }
+
     match format {
         "osgb" => {
-            convert_osgb(input, output, tile_config);
+            convert_osgb(input, inputXML, output, tile_config);
         }
         "shape" => {
             convert_shapefile(input, output, height_field);
@@ -212,13 +230,14 @@ struct ModelMetadata {
     pub SRSOrigin: String,
 }
 
-fn convert_osgb(src: &str, dest: &str, config: &str) {
+fn convert_osgb(src: &str, srcXML: &str, dest: &str, config: &str) {
     use std::time;
     use serde_json::Value;
     use std::fs::File;
     use std::io::prelude::*;
 
     let dir = std::path::Path::new(src);
+    let dirXML = std::path::Path::new(srcXML);
     let dir_dest = std::path::Path::new(dest);
 
     let mut center_x = 0f64;
@@ -227,7 +246,7 @@ fn convert_osgb(src: &str, dest: &str, config: &str) {
     let mut trans_region = None;
 
     // try parse metadata.xml
-    let metadata_file = dir.join("metadata.xml");
+    let metadata_file = dirXML.join("metadata.xml");
     if metadata_file.exists() {
         // read and parse
         if let Ok(mut f) = File::open(&metadata_file) {

@@ -111,12 +111,12 @@ pub fn osgb_batch_convert(
     use std::sync::mpsc::channel;
 
 
-    let mut path = dir.join("Data/root");    //本行  修改之前： let path = dir.join("Data");
+    let mut path = dir.join("root");    //本行  修改之前： let path = dir.join("Data");
     // 指定 .\Data 目录
 
     if !path.exists() || !path.is_dir() {
 
-		path = dir.join("Data");
+		path = dir.to_path_buf();
 
 	    if !path.exists() || !path.is_dir() {
 			return Err(From::from(format!("dir {} not exist", path.display())));

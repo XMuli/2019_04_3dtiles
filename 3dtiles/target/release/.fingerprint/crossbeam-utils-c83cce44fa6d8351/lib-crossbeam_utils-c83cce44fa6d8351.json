@@ -1,1 +1,1 @@
-{"rustc":8617792432618773455,"features":"[\"default\", \"use_std\"]","target":4281640834757134876,"profile":2574335274271406459,"path":1757635459776936098,"deps":[["cfg-if v0.1.7","cfg_if",11578047876557331819]],"local":[{"Precalculated":"0.2.2"}],"rustflags":[],"edition":"Edition2015"}
+{"rustc":8617792432618773455,"features":"[\"default\", \"use_std\"]","target":4281640834757134876,"profile":2574335274271406459,"path":16367712026350326785,"deps":[["cfg-if v0.1.7","cfg_if",3321784306098816706]],"local":[{"Precalculated":"0.2.2"}],"rustflags":[],"edition":"Edition2015"}

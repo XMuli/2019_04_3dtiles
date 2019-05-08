@@ -1,5 +1,9 @@
 ### 3dtiles 使用说明
 
+[TOC]
+
+
+
 #### 声明:
 
 [fanvanzh/3dtiles]: https://github.com/fanvanzh/3dtiles	"fork fanvanzh/3dtiles"
@@ -10,17 +14,33 @@
 
 ------
 
-==**本版本，仅仅针对于osgb转换3dtiles格式的修改**==
+### 本版本`【3dtiles  v1.0】`
+
+#### 修改时间：
+
+2019_04_22
+
+即 “fork fanvanzh/3dtiles” 的基础版本，未做任何修改
+
+------
+
+### **本版本`【3dtiles  v2.0】`**
+
+#### **修改时间:**
+
+2019_04_28
+
+#### **说明:**
+
+仅针对于osgb转换3dtiles格式的修改
 
 #### 解决的问题：
 
 直接转换，不会如下的错误出现 ，可以直接在CesiumLab发布，正常显示浏览
 
-```json
+```js
 RuntimeError: Unsupported glTF Extension: KHR_technique_webgl
 ```
-
-![1556177898356](3dtiles 使用说明.assets/1556177898356.png)
 
 #### 解决思路：
 
@@ -218,5 +238,84 @@ cd D:\programming\DataTest\3dtiles\target\release
 
 当用CesiumLab发布转换之后的3dtiles的数据，可以直接成功的显示刷新
 
+------
+
+### **本版本`【3dtiles  v3.0】`,**
+
+#### 修改时间:
+
+2019_05_08
+
+#### 说明:
+
+在上一个`【3dtiles  v2.0】`版本里面 做了内容的修改
+
+#### **功能：**
+
+1.metadata.xml文件的路径可以是任意的路径，无需放在和Data的同级目录
+
+2.直接传入Tile_xxx_xxx的上一级Data路径，和metadata.xml的上一级路径，分别是独立的
 
 
+
+#### 如何使用：
+
+**注意： **
+
+1.在命令行里面多了一个参数 `-x E:\DataXml`， 这是metadata.xml的上路径，且是必须参数，不可或缺
+
+
+
+2.将直接使用Tile_xxx_xxx 的一级目录，和metadata.xml一级目录，且可以单独独立分开
+
+比如:`D:\Osgb_Data` 和 `D:xmlPath` ，其目录结构如下
+
+
+
+Osgb_Data
+
+> root
+>
+> 		>Tile_-xxx_+xxx
+> 		>
+> 		>...
+>
+> Tile_-001_+001
+>
+> Tile_-001_+002
+>
+> Tile_-001_+003
+>
+> ...
+
+其中root文件夹可有可无
+
+
+
+xmlPath
+
+		>metadata.xml
+
+
+
+**举例:**
+
+1. 打开"cmd",运行
+2. 通过cd 相关的命令，进入到"3dtile.exe"一级的目录下
+3. 运行命令”`3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath -o D:\DataOsgb_23dtiles`“
+
+```rust
+cd D:\programming\DataTest\3dtiles\target\release
+
+3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath -o D:\DataOsgb_23dtiles
+```
+
+其中最后一个命令:
+
+`D:\Osgb_Data`为Tile_xxx_xxx的数据输入目录   
+
+ [如果有root目录，就会现在root里面寻找Tile_xxx_xxx，若是没有root文件夹，则会自动判断，找root的同级的Tile_xxx_xxx]
+
+`D:xmlPath` 为metadata.xml的输入目录
+
+`D:\DataOsgb_23dtiles`为输出目录
