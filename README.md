@@ -394,7 +394,7 @@ xmlPath
 
 1. 打开"cmd",运行
 2. 通过cd 相关的命令，进入到"3dtile.exe"一级的目录下
-3. 运行命令”`3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath -o D:\DataOsgb_23dtiles`“
+3. 运行命令”`3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath\abc.xml -o D:\DataOsgb_23dtiles`“
 
 ```rust
 cd D:\programming\DataTest\3dtiles\target\release
