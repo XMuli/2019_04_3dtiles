@@ -1112,7 +1112,7 @@ extern "C" void* osgb23dtile_path(
     // 返回 json 和 最大bbox
     extend_tile_box(root);
     if (root.bbox.max.empty() || root.bbox.min.empty()) {
-        LOG_E( "[%s] bbox is empty!", in_path);
+        //LOG_E( "[%s] bbox is empty!", in_path);
         return NULL;
     }
     // prevent for root node disappear

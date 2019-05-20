@@ -246,7 +246,8 @@ fn convert_osgb(src: &str, srcXML: &str, dest: &str, config: &str) {
     let mut trans_region = None;
 
     // try parse metadata.xml
-    let metadata_file = dirXML.join("metadata.xml");
+    //let metadata_file = dirXML.join("metadata.xml");
+    let metadata_file = dirXML;
     if metadata_file.exists() {
         // read and parse
         if let Ok(mut f) = File::open(&metadata_file) {

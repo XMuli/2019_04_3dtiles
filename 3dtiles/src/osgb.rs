@@ -174,7 +174,20 @@ pub fn osgb_batch_convert(
                 rad_x,rad_y,max_lvl
 	        );
 	        if out_ptr.is_null() {
-	            error!("failed: {}", info.in_dir);
+	            //error!("failed: {}", info.in_dir);
+		        //我修改的这里，json返回一个空的，后面有if !t.json.is_empty()的判断
+		        //为什么先exe一直在，是因为他会等到所有多线程返回才执行 let mut root_box = vec![-1.0E+38f64, -1.0E+38, -1.0E+38, 1.0E+38, 1.0E+38, 1.0E+38];这一句
+		        //所以这里也send一下，让他返回
+
+                let mut s = String::new();
+		        let t = TileResult {
+                    path: info.out_dir.into(),
+	                json: s,
+	                box_v: root_box,
+	             };
+                 
+                info.sender.send(t).unwrap();
+
 	        } else {
 	            json_buf.resize(json_len as usize, 0);
 	            libc::memcpy(
@@ -183,13 +196,17 @@ pub fn osgb_batch_convert(
 	                json_len as usize,
 	            );
 	            libc::free(out_ptr);
-	        }
-	        let t = TileResult {
+
+                 let t = TileResult {
                 path: info.out_dir.into(),
 	            json: String::from_utf8(json_buf).unwrap(),
 	            box_v: root_box,
 	        };
-	        info.sender.send(t).unwrap();
+            info.sender.send(t).unwrap();
+
+	      }
+	        
+	        
 	    }
     }).count();
 
