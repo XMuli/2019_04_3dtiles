@@ -1,0 +1,1 @@
+{"rustc":6271272977485306041,"features":"[\"default\", \"proc-macro\"]","target":11195544392456883412,"profile":2574335274271406459,"path":6044514944677740127,"deps":[["unicode-xid v0.1.0 (registry `https://mirrors.ustc.edu.cn/crates.io-index/`)","unicode_xid",8449237406928717677]],"local":[{"Precalculated":"0.4.30"}],"rustflags":[],"metadata":221150331100616940}

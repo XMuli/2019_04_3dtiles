@@ -1,0 +1,1 @@
+{"rustc":6271272977485306041,"features":"","target":0,"profile":0,"path":0,"deps":[["rayon-core v1.5.0 (registry `https://mirrors.ustc.edu.cn/crates.io-index/`)","build_script_build",7266079333965581518]],"local":[{"MtimeBased":[[1560738681,308850000],"build\\rayon-core-ddc189ff531043c6\\output"]}],"rustflags":[],"metadata":0}

@@ -12,6 +12,23 @@
 #include <cstring>
 #include <algorithm>
 
+#include "QtCore/QString"
+#include "QtCore/QDebug"
+#include "QtCore/QDir"
+#include "QtCore/QString"
+#include "QtCore/QFile"
+#include "QtCore/QFileInfo"
+#include "QtCore/QTextStream"
+#include "QtCore/QTime"
+#include "QtCore/QDateTime"
+#include "QtCore/QStringList"
+#include "QtCore/QMutex"
+
+
+
+
+#define DIS_TIME QDateTime::currentDateTime().toString("yyyy-MM-dd  hh:mm:ss.zzz")
+
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define TINYGLTF_IMPLEMENTATION
@@ -196,7 +213,7 @@ osg_tree get_all_tree(std::string& file_name) {
         osg::ref_ptr<osg::Node> root = osgDB::readNodeFiles(fileNames);
         if (!root) {
             std::string name = utf8_string(file_name.c_str());
-            LOG_E("read node files [%s] fail!", name.c_str());
+            LOG_E("read node files [%s] miss!  ->skip: the program is still running", name.c_str());
             return root_tile;
         }
         root_tile.file_name = file_name;
@@ -226,10 +243,45 @@ void alignment_buffer(std::vector<T>& buf) {
     }
 }
 
-bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info>& v_info) {
+bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info>& v_info, std::string logpath) {
     vector<string> fileNames = { path };
     std::string parent_path = get_parent(path);
     osg::ref_ptr<osg::Node> root = osgDB::readNodeFiles(fileNames);
+    QString strpath = QString::fromStdString(logpath);
+
+    QDir* pdir = NULL;
+    QFileInfo* pfileinfoName = NULL;
+    QFile* pfileTemp = NULL;
+    QTextStream* ptxtOutput = NULL;
+    QString strFileName = "";
+    QString strLogTxt = "";
+
+    if(!strpath.isEmpty())
+    {
+        pdir = new QDir();
+        if(pdir != NULL)
+            pdir->mkpath(strpath);
+
+        pfileinfoName = new QFileInfo(QString::fromStdString(path));
+        if(pfileinfoName != NULL)
+        {
+            strFileName = pfileinfoName->baseName();
+            strLogTxt = strpath + "\\" + strFileName + "_Log.txt";
+        }
+
+        pfileTemp = new QFile(strLogTxt); 
+        ptxtOutput = new QTextStream(pfileTemp);
+        if(pfileTemp != NULL && ptxtOutput != NULL)
+        {
+            if(!pfileTemp->open(QIODevice::WriteOnly | QIODevice::Text))
+                qDebug()<<"create file faile:"<<strLogTxt;
+        }
+
+    }
+
+    if(ptxtOutput != NULL)
+        (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("if (!root.valid())\n\n");
+
     if (!root.valid()) {
         return false;
     }
@@ -237,6 +289,9 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
     root->accept(infoVisitor);
     if (infoVisitor.geometry_array.empty())
         return false;
+
+    if(ptxtOutput != NULL)
+        (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("root->accept(sv);\n\n");
 
     osgUtil::SmoothingVisitor sv;
     root->accept(sv);
@@ -248,6 +303,10 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
         // buffer_view {index,vertex,normal(texcoord,image)}
         uint32_t buf_offset = 0;
         uint32_t acc_offset[4] = { 0,0,0,0 };
+
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("for (int j = 0; j < 4; j++)\n\n");
+
         for (int j = 0; j < 4; j++)
         {
             for (auto g : infoVisitor.geometry_array) {
@@ -255,10 +314,15 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                     continue;
                 }
                 osg::Array* va = g->getVertexArray();
+				if (va == NULL) {
+					qDebug() << "osgb2glb_buf() Error: va is null.   "<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
+					continue;
+				}
                 if (j == 0) {
                     // indc
                     {
                         osg::PrimitiveSet* ps = g->getPrimitiveSet(0);
+						if (ps == NULL) qDebug() << "osgb2glb_buf() Error: ps is null";
                         osg::PrimitiveSet::Type t = ps->getType();
                         int idx_size = ps->getNumIndices();
                         int max_index = 0, min_index = 1 << 30;
@@ -267,6 +331,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                             case(osg::PrimitiveSet::DrawElementsUBytePrimitiveType):
                             {
                                 const osg::DrawElementsUByte* drawElements = static_cast<const osg::DrawElementsUByte*>(ps);
+								if (drawElements == NULL) qDebug() << "osgb2glb_buf() Error: drawElements is null.  [DrawElementsUBytePrimitiveType]  "<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                                 int IndNum = drawElements->getNumIndices();
                                 for (size_t m = 0; m < IndNum; m++)
                                 {
@@ -279,6 +344,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                             case(osg::PrimitiveSet::DrawElementsUShortPrimitiveType):
                             {
                                 const osg::DrawElementsUShort* drawElements = static_cast<const osg::DrawElementsUShort*>(ps);
+								if (drawElements == NULL) qDebug() << "osgb2glb_buf() Error: drawElements is null.  [DrawElementsUShortPrimitiveType]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                                 int IndNum = drawElements->getNumIndices();
                                 for (size_t m = 0; m < IndNum; m++)
                                 {
@@ -291,6 +357,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                             case(osg::PrimitiveSet::DrawElementsUIntPrimitiveType):
                             {
                                 const osg::DrawElementsUInt* drawElements = static_cast<const osg::DrawElementsUInt*>(ps);
+								if (drawElements == NULL) qDebug() << "osgb2glb_buf() Error: drawElements is null.  [DrawElementsUIntPrimitiveType]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                                 unsigned int IndNum = drawElements->getNumIndices();
                                 for (size_t m = 0; m < IndNum; m++)
                                 {
@@ -302,6 +369,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                             }
                             case osg::PrimitiveSet::DrawArraysPrimitiveType: {
                                 osg::DrawArrays* da = dynamic_cast<osg::DrawArrays*>(ps);
+								if (da == NULL) qDebug() << "osgb2glb_buf() Error: da is null.  [DrawArraysPrimitiveType]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                                 auto mode = da->getMode();
                                 if (mode != GL_TRIANGLES) {
                                     LOG_E("GLenum is not GL_TRIANGLES in osgb");
@@ -348,6 +416,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                             break;
                             case osg::PrimitiveSet::DrawArraysPrimitiveType: {
                                 osg::DrawArrays* da = dynamic_cast<osg::DrawArrays*>(ps);
+								if (da == NULL) qDebug() << "osgb2glb_buf() Error: da is null.  [DrawArraysPrimitiveType]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                                 int first = da->getFirst();
                                 int count = da->getCount();
                                 int max_num = first + count;
@@ -368,6 +437,8 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                         acc.count = idx_size;
                         acc.type = TINYGLTF_TYPE_SCALAR;
                         osg::Vec3Array* v3f = (osg::Vec3Array*)va;
+						if (v3f == NULL) qDebug() << "osgb2glb_buf() Error: v3f is null.   [j == 0]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
+
                         int vec_size = v3f->size();
                         acc.maxValues = { (double)max_index };
                         acc.minValues = { (double)min_index };
@@ -376,6 +447,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                 }
                 else if (j == 1) {
                     osg::Vec3Array* v3f = (osg::Vec3Array*)va;
+					if (v3f == NULL) qDebug() << "osgb2glb_buf() Error: v3f is null.   [j == 1]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                     int vec_size = v3f->size();
                     vector<double> box_max = {-1e38, -1e38 ,-1e38 };
                     vector<double> box_min = { 1e38, 1e38 ,1e38 };
@@ -414,7 +486,9 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                 else if (j == 2) {
                     // normal
                     osg::Array* na = g->getNormalArray();
+					if (na == NULL) qDebug() << "osgb2glb_buf() Error: na is null.   [j == 2]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                     osg::Vec3Array* v3f = (osg::Vec3Array*)na;
+					if (v3f == NULL) qDebug() << "osgb2glb_buf() Error: v3f is null.   [j == 2]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                     vector<double> box_max = { -1e38, -1e38 ,-1e38 };
                     vector<double> box_min = { 1e38, 1e38 ,1e38 };
                     int normal_size = v3f->size();
@@ -450,8 +524,10 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                     vector<double> box_min = { 1e38, 1e38 };
                     int texture_size = 0;
                     osg::Array* na = g->getTexCoordArray(0);
+					if (na == NULL) qDebug() << "osgb2glb_buf() Error: na is null.   [j == 3]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                     if (na) {
                         osg::Vec2Array* v2f = (osg::Vec2Array*)na;
+						if (v2f == NULL) qDebug() << "osgb2glb_buf() Error: v2f is null.   [j == 3]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                         texture_size = v2f->size();
                         for (int vidx = 0; vidx < texture_size; vidx++)
                         {
@@ -466,6 +542,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                     }
                     else { // mesh 没有纹理坐标
                         osg::Vec3Array* v3f = (osg::Vec3Array*)va;
+						if (v3f == NULL) qDebug() << "osgb2glb_buf() Error: v3f is null.   [else   // mesh]"<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                         int vec_size = v3f->size();
                         texture_size = vec_size;
                         box_max = { 0,0 };
@@ -490,6 +567,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                     model.accessors.push_back(acc);
                 }
             }
+
             tinygltf::BufferView bfv;
             bfv.buffer = 0;
             if (j == 0) {
@@ -498,6 +576,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
             else {
                 bfv.target = TINYGLTF_TARGET_ARRAY_BUFFER;
             }
+
             bfv.byteOffset = buf_offset;
             alignment_buffer(buffer.data);
             bfv.byteLength = buffer.data.size() - buf_offset;
@@ -509,6 +588,9 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
             }
             model.bufferViews.push_back(bfv);
         }
+
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("// image\n\n");
         // image
         {
             int buf_view = 4;
@@ -520,6 +602,7 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                     if (tex) {
                         if (tex->getNumImages() > 0) {
                             osg::Image* img = tex->getImage(0);
+							if (img == NULL) qDebug() << "osgb2glb_buf() Error: img is null."<<"[path]:"<<QString::fromLocal8Bit(path.c_str());
                             if (img) {
                                 width = img->s();
                                 height = img->t();
@@ -570,6 +653,9 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                 model.bufferViews.push_back(bfv);
             }
         }
+
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("// mesh\n\n");
         // mesh 
         {
             int MeshNum = infoVisitor.geometry_array.size();
@@ -611,6 +697,9 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
                 model.nodes.push_back(node);
             }
         }
+
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("// scene\n\n");
         // scene
         {
             // 一个场景
@@ -622,6 +711,9 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
             model.scenes = { sence };
             model.defaultScene = 0;
         }
+
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("// sample\n\n");
         // sample
         {
             tinygltf::Sampler sample;
@@ -632,6 +724,10 @@ bool osgb2glb_buf(std::string path, std::string& glb_buff, std::vector<mesh_info
             model.samplers = { sample };
         }
         /// --------------
+
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("if(0)\n\n");
+
         if(0)
         {
             for (int i = 0 ; i < infoVisitor.texture_array.size(); i++)
@@ -826,9 +922,14 @@ void main(void)
                 model.materials.push_back(material);
             }
         }
+
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("// finish buffer\n\n");
         // finish buffer
         model.buffers.push_back(std::move(buffer));
 
+        if(ptxtOutput != NULL)
+            (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("// texture\n\n");
         /// ----------------------
         // texture
         {
@@ -846,15 +947,33 @@ void main(void)
 
         glb_buff = gltf.Serialize(&model);
     }
+
+    if(ptxtOutput != NULL)
+        (*ptxtOutput)<<DIS_TIME<<"  [wile run] "<<QString("pfileTemp->close();\n\n");
+
+    if(pfileTemp != NULL)   
+        pfileTemp->close();
+
+    if(!strpath.isEmpty())
+    {
+        delete pdir;
+        delete pfileinfoName;
+        delete pfileTemp;
+        delete ptxtOutput;
+
+        QFile delTemp(strLogTxt);
+        delTemp.remove();
+    }
+    
     return true;
 }
 
-bool osgb23dtile_buf(std::string path, std::string& b3dm_buf, TileBox& tile_box) {
+	bool osgb23dtile_buf(std::string path, std::string& b3dm_buf, TileBox& tile_box, const char* logpath) {
     using nlohmann::json;
     
     std::string glb_buf;
     std::vector<mesh_info> v_info;
-    bool ret = osgb2glb_buf(path, glb_buf,v_info);
+    bool ret = osgb2glb_buf(path, glb_buf,v_info, logpath);
     if (!ret) return false;
 
     tile_box.max = {-1e38,-1e38,-1e38};
@@ -943,8 +1062,64 @@ std::vector<double> convert_bbox(TileBox tile) {
     return v;
 }
 
+
+
+static QStringList g_RetStrList;
+static int g_nCurrent = 0;
+static int g_nCount = 0;
+static bool g_bProgressBar = false;
+
+
+QFileInfoList GetFileList(QString path)
+{
+	QDir dir(path);
+	QFileInfoList file_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+	QFileInfoList folder_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+
+	for (int i = 0; i != folder_list.size(); i++)
+	{
+		QString name = folder_list.at(i).absoluteFilePath();
+		QFileInfoList child_file_list = GetFileList(name);
+		file_list.append(child_file_list);
+	}
+
+	return file_list;
+}
+
+extern "C" bool GetSum(const char* pInpath, const char* pProgressBar)
+{
+	QString path = QString::fromStdString(pInpath);
+    QString strProPath = QString::fromStdString(pProgressBar);
+
+    if (strProPath.isEmpty())
+	{
+		g_bProgressBar = false;
+		return false;
+	}
+
+	QFileInfoList fileinfolist = GetFileList(path);
+	QFile myfile(path);
+
+	if (myfile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+		qDebug() << "create file faile:" << path;
+
+	QTextStream mybar_txt(&myfile);
+	for (int i = 0; i < fileinfolist.size(); i++)
+	{
+		QStringList strlistTemp = fileinfolist[i].fileName().split("_");
+		if (strlistTemp.size() == 3 && strlistTemp.at(1).length() == 4)
+			g_RetStrList << fileinfolist[i].fileName();
+	}
+
+	myfile.close();
+    g_bProgressBar = true;
+	return true;
+}
+
+
+
 // 生成 b3dm ， 再统一外扩模型的 bbox
-void do_tile_job(osg_tree& tree, std::string out_path, int max_lvl) {
+void do_tile_job(osg_tree& tree, std::string out_path, int max_lvl, const char* logpath, const char* progresspath ) {
     // 转瓦片、写json
     std::string json_str;
     if (tree.file_name.empty()) return;
@@ -952,7 +1127,11 @@ void do_tile_job(osg_tree& tree, std::string out_path, int max_lvl) {
     if (lvl > max_lvl) return;
     // 转 tile 
     std::string b3dm_buf;
-    osgb23dtile_buf(tree.file_name, b3dm_buf, tree.bbox);
+
+	osgb23dtile_buf(tree.file_name, b3dm_buf, tree.bbox, logpath);
+
+	g_nCount = g_RetStrList.size();
+   
     // false 可能当前为空, 但存在子节点
     std::string out_file = out_path;
     out_file += "/";
@@ -968,8 +1147,42 @@ void do_tile_job(osg_tree& tree, std::string out_path, int max_lvl) {
     //write_file(out_file.c_str(), glb_buf.data(), glb_buf.size());
     // end test
     for (auto& i : tree.sub_nodes) {
-        do_tile_job(i,out_path,max_lvl);
+        do_tile_job(i,out_path,max_lvl, logpath, progresspath);
     }
+
+	if (g_bProgressBar)
+	{
+		QFileInfo fileinfoTemp(QString::fromStdString(tree.file_name));
+		bool bFlage = false;
+		for (int i = 0; i < g_RetStrList.size(); i++)
+		{
+			if (g_RetStrList[i] == fileinfoTemp.fileName())
+				bFlage = true;
+		}
+
+		if (bFlage)
+		{
+			QMutex mutex;
+			mutex.lock();
+			g_nCurrent++;
+
+			QString strProgressBar = QString::fromStdString(progresspath);
+			QFileInfo fileinfo(strProgressBar);
+			QDir dir;
+			dir.mkpath(fileinfo.path());
+
+			QFile myfileBar(strProgressBar);
+			myfileBar.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+			QTextStream mybar_txt(&myfileBar);
+			QString strtemp = QString("{\"current\":%1,\"count\":%2,\"currentTile\":%3}\n").arg(g_nCurrent).arg(g_nCount).arg(fileinfoTemp.fileName());
+			mybar_txt << strtemp;
+			myfileBar.close();
+
+			mutex.unlock();
+		}
+	}
+    
+
 }
 
 void expend_box(TileBox& box, TileBox& box_new) {
@@ -1099,7 +1312,7 @@ std::string encode_tile_json(osg_tree& tree, double x, double y) {
 外面分配好 string [1024*1024]
 */
 extern "C" void* osgb23dtile_path(
-    const char* in_path, const char* out_path, 
+    const char* in_path, const char* out_path, const char* logpath,  const char* progresspath,
     double *box, int* len, double x, double y,int max_lvl) {
     
     std::string path = osg_string(in_path);
@@ -1108,7 +1321,7 @@ extern "C" void* osgb23dtile_path(
         LOG_E( "open file [%s] fail!", in_path);
         return NULL;
     }
-    do_tile_job(root, out_path, max_lvl);
+    do_tile_job(root, out_path, max_lvl, logpath, progresspath);
     // 返回 json 和 最大bbox
     extend_tile_box(root);
     if (root.bbox.max.empty() || root.bbox.min.empty()) {
@@ -1133,7 +1346,7 @@ extern "C" bool osgb23dtile(
     std::string b3dm_buf;
     TileBox tile_box;
     std::string path = osg_string(in);
-    bool ret = osgb23dtile_buf(path.c_str(),b3dm_buf,tile_box);
+    bool ret = osgb23dtile_buf(path.c_str(),b3dm_buf,tile_box, "");
     if (!ret) return false;
     ret = write_file(out, b3dm_buf.data(), b3dm_buf.size());
     if (!ret) return false;
@@ -1173,11 +1386,11 @@ extern "C" bool osgb23dtile(
 }
 
 // 所有接口都是 utf8 字符串
-extern "C" bool osgb2glb(const char* in, const char* out) {
+extern "C" bool osgb2glb(const char* in, const char* out, std::string logpath) {
     std::string b3dm_buf;
     std::vector<mesh_info> v_info;
     std::string path = osg_string(in);
-    bool ret = osgb2glb_buf(path,b3dm_buf,v_info);
+    bool ret = osgb2glb_buf(path,b3dm_buf,v_info, logpath);
     if (!ret) return false;
     ret = write_file(out, b3dm_buf.data(), b3dm_buf.size());
     if (!ret) return false;

@@ -61,7 +61,7 @@ fn main() {
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("inputXML")
+            Arg::with_name("inputXML")    //输出.xml路径参数
                 .short("x")
                 .long("inputXML")
                 .value_name("FILE")
@@ -86,6 +86,24 @@ fn main() {
                 .help("Set input format")
                 .required(true)
                 .takes_value(true),
+        )
+        .arg(
+            Arg::with_name("logpath")            //输出log日志路径参数
+                .short("p")
+                .long("logpath")
+                .value_name("FILE")
+                .help("Set the input log path")
+                .required(false)           
+                .takes_value(true),       
+        )
+        .arg(
+            Arg::with_name("progress")            //输出进度条参数
+                .short("b")
+                .long("progress")
+                .value_name("FILE")
+                .help("Set the input progress bar")
+                .required(false)           
+                .takes_value(true),       
         )
         .arg(
             Arg::with_name("config")
@@ -121,8 +139,10 @@ fn main() {
     let inputXML = matches.value_of("inputXML").unwrap();
     let output = matches.value_of("output").unwrap();
     let format = matches.value_of("format").unwrap();
+    let logpath = matches.value_of("logpath").unwrap_or("");   //存放一个log path的路径，
+    let progress = matches.value_of("progress").unwrap_or("");   //存放一个progress bar的路径，
     let tile_config = matches.value_of("config").unwrap_or("");
-    let height_field = matches.value_of("height").unwrap_or("");
+    let height_field = matches.value_of("height").unwrap_or("");  
 
     if matches.is_present("verbose") {
         info!("set program versose on");
@@ -142,7 +162,7 @@ fn main() {
 
     match format {
         "osgb" => {
-            convert_osgb(input, inputXML, output, tile_config);
+            convert_osgb(input, inputXML, output, tile_config, logpath, progress);
         }
         "shape" => {
             convert_shapefile(input, output, height_field);
@@ -230,7 +250,7 @@ struct ModelMetadata {
     pub SRSOrigin: String,
 }
 
-fn convert_osgb(src: &str, srcXML: &str, dest: &str, config: &str) {
+fn convert_osgb(src: &str, srcXML: &str, dest: &str, config: &str, logpath: &str, progress: &str) {
     use std::time;
     use serde_json::Value;
     use std::fs::File;
@@ -245,7 +265,7 @@ fn convert_osgb(src: &str, srcXML: &str, dest: &str, config: &str) {
     let mut max_lvl = None;
     let mut trans_region = None;
 
-    // try parse metadata.xml
+    // try parse metadata.xml    
     //let metadata_file = dirXML.join("metadata.xml");
     let metadata_file = dirXML;
     if metadata_file.exists() {
@@ -345,6 +365,9 @@ fn convert_osgb(src: &str, srcXML: &str, dest: &str, config: &str) {
     if let Err(e) = osgb::osgb_batch_convert(
         &dir,
         &dir_dest,
+        src,
+        logpath,
+        progress,
         max_lvl,
         center_x,
         center_y,

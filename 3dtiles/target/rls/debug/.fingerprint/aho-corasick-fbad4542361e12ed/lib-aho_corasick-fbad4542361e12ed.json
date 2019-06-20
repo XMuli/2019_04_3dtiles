@@ -1,0 +1,1 @@
+{"rustc":6271272977485306041,"features":"[\"default\", \"memchr\", \"std\"]","target":9252676846766199821,"profile":14672114853574311971,"path":2680071643317529193,"deps":[["memchr v2.2.0 (registry `https://mirrors.ustc.edu.cn/crates.io-index/`)","memchr",16075212016663103230]],"local":[{"Precalculated":"0.7.3"}],"rustflags":[],"metadata":13904389431191498124}

@@ -912,8 +912,10 @@ extern "C" DLL_API void free_buffer(void* buf) {
 外面分配好 string [1024*1024]
 */
 extern "C" DLL_API void* osgb23dtile_path(
-    const char* in_path, const char* out_path, 
+    const char* in_path, const char* out_path,
     double *box, int* len, int max_lvl) {
+
+    cout<<"4444444444444444444444442"<<endl;
     std::string path = in_path;
     osg_tree root = get_all_tree(path);
     if (root.file_name.empty()) {
@@ -942,7 +944,7 @@ extern "C" bool osgb23dtile(
     std::string b3dm_buf;
     tile_box tile_box;
     std::string path = osg_string(in);
-    bool ret = osgb23dtile_buf(path.c_str(),b3dm_buf,tile_box);
+    bool ret = osgb23dtile_buf(path.c_str(),b3dm_buf,tile_box, "");
     if (!ret) return false;
     ret = write_file(out, b3dm_buf.data(), b3dm_buf.size());
     if (!ret) return false;

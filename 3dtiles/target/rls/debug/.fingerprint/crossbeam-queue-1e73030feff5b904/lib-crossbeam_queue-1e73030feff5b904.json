@@ -1,0 +1,1 @@
+{"rustc":6271272977485306041,"features":"[]","target":17023036672561697137,"profile":14672114853574311971,"path":6129794731226549740,"deps":[["crossbeam-utils v0.6.5 (registry `https://mirrors.ustc.edu.cn/crates.io-index/`)","crossbeam_utils",12093586540188555280]],"local":[{"Precalculated":"0.1.2"}],"rustflags":[],"metadata":15335350874009280829}

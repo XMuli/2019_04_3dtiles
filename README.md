@@ -1,10 +1,10 @@
 ### 3dtiles 使用说明
 
-
+![](https://raw.githubusercontent.com/touwoyimuli/FigureBed/master/img/20190620210305.png)
 
 [TOC]
 
-![](https://raw.githubusercontent.com/touwoyimuli/FigureBed/master/img/20190529195246.png)
+
 
 #### 声明:
 
@@ -12,21 +12,261 @@
 
  下载master  分支  时间于:2019-04 -22   将其作为基础版本，进行修改和相关的需求的更改和优化
 
-<img src="https://github.com/touwoyimuli/2019_04_3dtiles/blob/master/images/1.png"  height="300" width="400">
+![](https://raw.githubusercontent.com/touwoyimuli/FigureBed/master/img/20190620205610.png  )
+
+
+
+
 
 ------
 
-### 本版本`【3dtiles  v1.0】`
 
-#### 修改时间：
 
-2019_04_22
+### **本版本`【3dtiles  v4.0】`,**
 
-即 “fork fanvanzh/3dtiles” 的基础版本，未做任何修改
+#### 修改时间:
+
+2019_06_20
+
+#### 说明:
+
+在上一个`【3dtiles  v3.2】`版本里面, 做了内容的修改，修复一个可能导致程序运行的bug，且新增日志和进度功能，均已文件形式记录。
+
+#### 如何使用：
+
+1. 打开"cmd",运行
+
+2. 通过cd 相关的命令，进入到"3dtile.exe"一级的目录下
+
+```html
+cd D:\programming\DataTest\3dtiles\target\release
+```
+
+3. 运行命令
+
+示范一：
+
+```html
+ 3dtile.exe -f osgb -i D:\Osgb\Data -x D:\xmlPath\metadata.xml -o D:\DataOsgb_23dtiles
+```
+
+示范二：
+
+```html
+3dtile.exe -f osgb -i D:\Osgb\Data -x D:\xmlPath\metadata.xml -o D:\DataOsgb_23dtiles –p D:\LOG\Tile_TXT -d D:\Json\Count\test.json
+```
+
+#### 参数说明：
+
+**<font color=#D0087E size=4 face="幼圆">-f：输入类型转换参数</font>**  osgb, 	shape, 	gltf
+
+**<font color=#D0087E size=4 face="幼圆">-i：输入文件夹参数。</font>**  要精确到`.\Data`一级目录
+
+`D:\Osgb_Data`为`Tile_xxx_xxx`的数据输入目录 
+
+说明：[如果有root目录，就会现在root里面寻找Tile_xxx_xxx，若是没有root文件夹，则会自动判断，找root的同级的Tile_xxx_xxx]
+
+**<font color=#D0087E size=4 face="幼圆">-x：输入文件参数。</font>** 	输入路径**带**具体文件名称（一定要是.xml文件）。
+
+`D:\xmlPath\metadata.xml` 即为`metadata.xml`的输入目录   （`metadata.xml` 也可以是任何名称`xxx.xml`）
+
+**<font color=#D0087E size=4 face="幼圆">-o：输出文件夹参数。</font>** 	选择任意一个已存在的空文件夹
+
+`D:\DataOsgb_23dtiles` 为输出目录
+
+**<font color=#D0087E size=4 face="幼圆">-p：调试参数。(可选参数)</font>** 	后面若输入`-p  “”`, 或者不输入该参数。则运行时候，不会出创建日志，记录当前具体`Tile_xx.osgb`的运行到哪一个地方了，若是该Tile_xx转换成功，则随即删除该`Tile_xx_Log.txt`日志；
+
+​		若是输入 <font color=#70AD47 size=3 face="幼圆">-p  "任意路径**不带**具体文件名(可已存在或不存在)" </font> 则运行时候，会出现自动跟踪和创建日志
+
+**<font color=#D0087E size=4 face="幼圆">-d：调试参数。(可选参数)</font>** 后面若输入`-d  “”`, 或者不输入该参数。则运行时候，不会出现创日志文件，保存任务进度等信息；
+
+​		若是输入 <font color=#70AD47 size=3 face="幼圆">-d "任意路径**带**具体文件名(可已存在或不存在)"</font>则运行时候，会出现自动跟踪和创建日志
+
+
+
+**说明:**	若是选用-p、-d参数，可以在程序运行或结束后时候，到对应的文件夹下查看日志文件和进度条，
+
+
 
 ------
 
-### **本版本`【3dtiles  v2.0】`**
+
+
+### **本版本`【3dtiles  v3.2】`,**
+
+#### 修改时间:
+
+2019_05_20
+
+#### 说明:
+
+在上一个`【3dtiles  v3.0】`版本里面 做了内容的修改
+
+#### **功能：**
+
+**1.metadata.xml（`metadata.xml`可以是其他名称`abc.xml`）文件的路径(包含是到..\metadata.xml)可以是任意的路径，直接传入`xxx.xml`文件，无需放在和Data的同级目录**
+
+2.直接传入`Tile_xxx_xxx`的上一级Data路径，和metadata.xml的上一级路径，分别是独立的
+
+**3.当遇到没有数据的`Tile_xxx_xxx`时候，会自动跳过，执行下一个有数据的`Tile_xxx_xxx`。不会像上一个版本一样，整个程序终止**
+
+
+
+#### 如何使用：
+
+**注意： **
+
+1.在命令行里面多了一个参数 `-x E:\DataXml`， 这是metadata.xml的路径，且是必须参数，不可或缺
+
+
+
+2.将直接使用Tile_xxx_xxx 的一级目录，和metadata.xml一级目录，且可以单独独立分开
+
+比如:`D:\Osgb_Data` 和 `D:xmlPath` ，其目录结构如下
+
+
+
+Osgb_Data
+
+> root
+>
+> ```
+> 	>Tile_-xxx_+xxx
+> 	>
+> 	>...
+> ```
+>
+> Tile_-001_+001
+>
+> Tile_-001_+002
+>
+> Tile_-001_+003
+>
+> ...
+
+其中root文件夹可有可无
+
+
+
+xmlPath
+
+```
+	>metadata.xml
+```
+
+
+
+**举例:**
+
+1. 打开"cmd",运行
+2. 通过cd 相关的命令，进入到"3dtile.exe"一级的目录下
+3. 运行命令”`3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath\abc.xml -o D:\DataOsgb_23dtiles`“
+
+```rust
+cd D:\programming\DataTest\3dtiles\target\release
+
+3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath\abc.xml -o D:\DataOsgb_23dtiles
+```
+
+其中最后一个命令:
+
+`D:\Osgb_Data`为Tile_xxx_xxx的数据输入目录   
+
+ [如果有root目录，就会现在root里面寻找Tile_xxx_xxx，若是没有root文件夹，则会自动判断，找root的同级的Tile_xxx_xxx]
+
+**`D:xmlPath\abc.xml` 为metadata.xml的输入目录**  **(这里改了)**
+
+`D:\DataOsgb_23dtiles`为输出目录
+
+
+
+------
+
+### **本版本`【3dtiles  v3.0】`,**
+
+#### 修改时间:
+
+2019_05_08
+
+#### 说明:
+
+在上一个`【3dtiles  v2.0】`版本里面 做了内容的修改
+
+#### **功能：**
+
+1.metadata.xml文件的路径可以是任意的路径，无需放在和Data的同级目录
+
+2.直接传入Tile_xxx_xxx的上一级Data路径，和metadata.xml的上一级路径，分别是独立的
+
+
+
+#### 如何使用：
+
+**注意： **
+
+1.在命令行里面多了一个参数 `-x E:\DataXml`， 这是metadata.xml的上路径，且是必须参数，不可或缺
+
+
+
+2.将直接使用Tile_xxx_xxx 的一级目录，和metadata.xml一级目录，且可以单独独立分开
+
+比如:`D:\Osgb_Data` 和 `D:xmlPath` ，其目录结构如下
+
+
+
+Osgb_Data
+
+> root
+>
+> 		>Tile_-xxx_+xxx
+> 		>
+> 		>...
+>
+> Tile_-001_+001
+>
+> Tile_-001_+002
+>
+> Tile_-001_+003
+>
+> ...
+
+其中root文件夹可有可无
+
+
+
+xmlPath
+
+		>metadata.xml
+
+
+
+**举例:**
+
+1. 打开"cmd",运行
+2. 通过cd 相关的命令，进入到"3dtile.exe"一级的目录下
+3. 运行命令”`3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath -o D:\DataOsgb_23dtiles`“
+
+```rust
+cd D:\programming\DataTest\3dtiles\target\release
+
+3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath -o D:\DataOsgb_23dtiles
+```
+
+其中最后一个命令:
+
+`D:\Osgb_Data`为Tile_xxx_xxx的数据输入目录   
+
+ [如果有root目录，就会现在root里面寻找Tile_xxx_xxx，若是没有root文件夹，则会自动判断，找root的同级的Tile_xxx_xxx]
+
+`D:xmlPath` 为metadata.xml的输入目录
+
+`D:\DataOsgb_23dtiles`为输出目录
+
+
+
+------
+
+### **本版本`【3dtiles  v2.0  版本bug解决，附带思路】`**
 
 #### **修改时间:**
 
@@ -240,176 +480,14 @@ cd D:\programming\DataTest\3dtiles\target\release
 
 当用CesiumLab发布转换之后的3dtiles的数据，可以直接成功的显示刷新
 
-------
-
-### **本版本`【3dtiles  v3.0】`,**
-
-#### 修改时间:
-
-2019_05_08
-
-#### 说明:
-
-在上一个`【3dtiles  v2.0】`版本里面 做了内容的修改
-
-#### **功能：**
-
-1.metadata.xml文件的路径可以是任意的路径，无需放在和Data的同级目录
-
-2.直接传入Tile_xxx_xxx的上一级Data路径，和metadata.xml的上一级路径，分别是独立的
-
-
-
-#### 如何使用：
-
-**注意： **
-
-1.在命令行里面多了一个参数 `-x E:\DataXml`， 这是metadata.xml的上路径，且是必须参数，不可或缺
-
-
-
-2.将直接使用Tile_xxx_xxx 的一级目录，和metadata.xml一级目录，且可以单独独立分开
-
-比如:`D:\Osgb_Data` 和 `D:xmlPath` ，其目录结构如下
-
-
-
-Osgb_Data
-
-> root
->
-> 		>Tile_-xxx_+xxx
-> 		>
-> 		>...
->
-> Tile_-001_+001
->
-> Tile_-001_+002
->
-> Tile_-001_+003
->
-> ...
-
-其中root文件夹可有可无
-
-
-
-xmlPath
-
-		>metadata.xml
-
-
-
-**举例:**
-
-1. 打开"cmd",运行
-2. 通过cd 相关的命令，进入到"3dtile.exe"一级的目录下
-3. 运行命令”`3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath -o D:\DataOsgb_23dtiles`“
-
-```rust
-cd D:\programming\DataTest\3dtiles\target\release
-
-3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath -o D:\DataOsgb_23dtiles
-```
-
-其中最后一个命令:
-
-`D:\Osgb_Data`为Tile_xxx_xxx的数据输入目录   
-
- [如果有root目录，就会现在root里面寻找Tile_xxx_xxx，若是没有root文件夹，则会自动判断，找root的同级的Tile_xxx_xxx]
-
-`D:xmlPath` 为metadata.xml的输入目录
-
-`D:\DataOsgb_23dtiles`为输出目录
-
 
 
 ------
 
+### 本版本`【3dtiles  v1.0 原版未修改，有bug不可使用】` 
 
+#### 修改时间：
 
-### **本版本`【3dtiles  v3.2】`,**
+2019_04_22
 
-#### 修改时间:
-
-2019_05_20
-
-#### 说明:
-
-在上一个`【3dtiles  v3.0】`版本里面 做了内容的修改
-
-#### **功能：**
-
-**1.metadata.xml（`metadata.xml`可以是其他名称`abc.xml`）文件的路径(包含是到..\metadata.xml)可以是任意的路径，直接传入`xxx.xml`文件，无需放在和Data的同级目录**
-
-2.直接传入`Tile_xxx_xxx`的上一级Data路径，和metadata.xml的上一级路径，分别是独立的
-
-**3.当遇到没有数据的`Tile_xxx_xxx`时候，会自动跳过，执行下一个有数据的`Tile_xxx_xxx`。不会像上一个版本一样，整个程序终止**
-
-
-
-#### 如何使用：
-
-**注意： **
-
-1.在命令行里面多了一个参数 `-x E:\DataXml`， 这是metadata.xml的路径，且是必须参数，不可或缺
-
-
-
-2.将直接使用Tile_xxx_xxx 的一级目录，和metadata.xml一级目录，且可以单独独立分开
-
-比如:`D:\Osgb_Data` 和 `D:xmlPath` ，其目录结构如下
-
-
-
-Osgb_Data
-
-> root
->
-> ```
-> 	>Tile_-xxx_+xxx
-> 	>
-> 	>...
-> ```
->
-> Tile_-001_+001
->
-> Tile_-001_+002
->
-> Tile_-001_+003
->
-> ...
-
-其中root文件夹可有可无
-
-
-
-xmlPath
-
-```
-	>metadata.xml
-```
-
-
-
-**举例:**
-
-1. 打开"cmd",运行
-2. 通过cd 相关的命令，进入到"3dtile.exe"一级的目录下
-3. 运行命令”`3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath\abc.xml -o D:\DataOsgb_23dtiles`“
-
-```rust
-cd D:\programming\DataTest\3dtiles\target\release
-
-3dtile.exe -f osgb -i D:\Osgb_Data -x D:xmlPath\abc.xml -o D:\DataOsgb_23dtiles
-```
-
-其中最后一个命令:
-
-`D:\Osgb_Data`为Tile_xxx_xxx的数据输入目录   
-
- [如果有root目录，就会现在root里面寻找Tile_xxx_xxx，若是没有root文件夹，则会自动判断，找root的同级的Tile_xxx_xxx]
-
-**`D:xmlPath\abc.xml` 为metadata.xml的输入目录**  **(这里改了)**
-
-`D:\DataOsgb_23dtiles`为输出目录
+即 “fork fanvanzh/3dtiles” 的基础版本，未做任何修改
