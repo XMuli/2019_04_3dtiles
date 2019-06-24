@@ -24,9 +24,6 @@
 #include "QtCore/QStringList"
 #include "QtCore/QMutex"
 
-
-
-
 #define DIS_TIME QDateTime::currentDateTime().toString("yyyy-MM-dd  hh:mm:ss.zzz")
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -202,8 +199,6 @@ int get_lvl_num(std::string file_name){
     return -1;
 }
 
-
-
 osg_tree get_all_tree(std::string& file_name) {
     osg_tree root_tile;
     vector<string> fileNames = { file_name };
@@ -213,7 +208,7 @@ osg_tree get_all_tree(std::string& file_name) {
         osg::ref_ptr<osg::Node> root = osgDB::readNodeFiles(fileNames);
         if (!root) {
             std::string name = utf8_string(file_name.c_str());
-            LOG_E("read node files [%s] miss!  ->skip: the program is still running", name.c_str());
+            LOG_E("read node files [%s] miss!  ->: 跳过，程序继续在运行", name.c_str());
             return root_tile;
         }
         root_tile.file_name = file_name;
@@ -1066,7 +1061,6 @@ std::vector<double> convert_bbox(TileBox tile) {
 
 static QStringList g_RetStrList;
 static int g_nCurrent = 0;
-static int g_nCount = 0;
 static bool g_bProgressBar = false;
 
 
@@ -1086,7 +1080,7 @@ QFileInfoList GetFileList(QString path)
 	return file_list;
 }
 
-extern "C" bool GetSum(const char* pInpath, const char* pProgressBar)
+extern "C" bool getSum(const char* pInpath, const char* pProgressBar)
 {
 	QString path = QString::fromStdString(pInpath);
     QString strProPath = QString::fromStdString(pProgressBar);
@@ -1129,8 +1123,6 @@ void do_tile_job(osg_tree& tree, std::string out_path, int max_lvl, const char* 
     std::string b3dm_buf;
 
 	osgb23dtile_buf(tree.file_name, b3dm_buf, tree.bbox, logpath);
-
-	g_nCount = g_RetStrList.size();
    
     // false 可能当前为空, 但存在子节点
     std::string out_file = out_path;
@@ -1162,7 +1154,7 @@ void do_tile_job(osg_tree& tree, std::string out_path, int max_lvl, const char* 
 
 		if (bFlage)
 		{
-			QMutex mutex;
+			static QMutex mutex;
 			mutex.lock();
 			g_nCurrent++;
 
@@ -1171,12 +1163,12 @@ void do_tile_job(osg_tree& tree, std::string out_path, int max_lvl, const char* 
 			QDir dir;
 			dir.mkpath(fileinfo.path());
 
-			QFile myfileBar(strProgressBar);
-			myfileBar.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
-			QTextStream mybar_txt(&myfileBar);
-			QString strtemp = QString("{\"current\":%1,\"count\":%2,\"currentTile\":%3}\n").arg(g_nCurrent).arg(g_nCount).arg(fileinfoTemp.fileName());
-			mybar_txt << strtemp;
-			myfileBar.close();
+			QFile fileBar(strProgressBar);
+			fileBar.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text);
+			QTextStream textBarTxt(&fileBar);
+			QString strtemp = QString("{\"current\":%1,\"count\":%2,\"currentTile\":%3}\n").arg(g_nCurrent).arg(g_RetStrList.size()).arg(fileinfoTemp.fileName());
+			textBarTxt << strtemp;
+			fileBar.close();
 
 			mutex.unlock();
 		}

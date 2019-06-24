@@ -19,13 +19,13 @@ extern "C" {
 
     fn osgb23dtile(name_in: *const u8, name_out: *const u8) -> bool;
 
-    fn GetSum(path: *const u8, pProgressBar: *const u8)  -> bool;
+    fn getSum(path: *const u8, pProgressBar: *const u8)  -> bool;
 
     fn osgb23dtile_path(
         name_in: *const u8,
         name_out: *const u8,
-        logpath: *const u8,
-        progresspath: *const u8,
+        log_path: *const u8,
+        progress_path: *const u8,
         box_ptr: *mut f64,
         len: *mut i32,
         x: f64,
@@ -107,7 +107,7 @@ struct OsgbInfo {
 pub fn osgb_batch_convert(
     dir: &Path,
     dir_dest: &Path,
-    dir_Input: &str,
+    dir_input: &str,
     dir_logpath: &str,
     dir_progress: &str,
     max_lvl: Option<i32>,
@@ -155,7 +155,7 @@ pub fn osgb_batch_convert(
                     sender: sender.clone()
                 });
             } else {
-                error!("dir error: {} ->跳过， 程序仍然在运行", osgb.display());
+                error!("dir error: {} ->: 跳过，程序继续在运行", osgb.display());
             }
         }
     }
@@ -167,10 +167,10 @@ pub fn osgb_batch_convert(
         degree2rad(center_y)
     };
 
-    let vec_input = str_to_vec_c(dir_Input);
+    let vec_input = str_to_vec_c(dir_input);
     let vec_progress = str_to_vec_c(dir_progress);
     let bRet = unsafe {
-         GetSum(vec_input.as_ptr(), vec_progress.as_ptr());
+         getSum(vec_input.as_ptr(), vec_progress.as_ptr());
      };
 
     let max_lvl: i32 = max_lvl.unwrap_or(100);
@@ -181,14 +181,14 @@ pub fn osgb_batch_convert(
 	        let mut json_len = 0i32;
 	        let in_ptr = str_to_vec_c(&info.in_dir);
 	        let out_ptr = str_to_vec_c(&info.out_dir);
-                let log_ptr = str_to_vec_c(dir_logpath);
-                let progress_ptr = str_to_vec_c(dir_progress);
+            let log_ptr = str_to_vec_c(dir_logpath);
+            let progress_ptr = str_to_vec_c(dir_progress);
 
 	        let out_ptr = osgb23dtile_path(     
 	            in_ptr.as_ptr(),
 	            out_ptr.as_ptr(),  
-                    log_ptr.as_ptr(),
-                    progress_ptr.as_ptr(),
+                log_ptr.as_ptr(),
+                progress_ptr.as_ptr(),
 	            root_box.as_mut_ptr(),
 	            (&mut json_len) as *mut i32,
                 rad_x,rad_y,max_lvl

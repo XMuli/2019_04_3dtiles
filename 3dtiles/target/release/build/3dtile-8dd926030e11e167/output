@@ -25,7 +25,7 @@ osgb23dtile.cpp
 ./src/osgb23dtile.cpp: warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\xlocale(341): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc
 d:\programming\datadas\3dtiles\src\tiny_gltf.h(3855): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
-./src/osgb23dtile.cpp(669): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+./src/osgb23dtile.cpp(664): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
 C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\include\cmath(157): warning C4577: 在未指定异常处理模式的情况下使用了 "noexcept"；不一定会在异常时终止。指定 /EHsc
 exit code: 0
 running: "C:\\Program Files (x86)\\Microsoft Visual Studio 14.0\\VC\\bin\\amd64\\cl.exe" "/nologo" "/MD" "/O2" "/I" "./src" "/I" "./src/osg" "/I" "./src/qt/include" "-Zi" "-Gm" "-INCREMENTAL" "/DWIN32" "/D_WINDOWS" "/FoD:\\programming\\DataDas\\3dtiles\\target\\release\\build\\3dtile-8dd926030e11e167\\out\\./src\\dxt_img.o" "/c" "./src/dxt_img.cpp"
