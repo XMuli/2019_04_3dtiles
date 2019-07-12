@@ -286,6 +286,7 @@ fn convert_osgb(src: &str, srcXML: &str, dest: &str, config: &str, logpath: &str
                                 if v1_num.is_ok() && v2_num.is_ok() {
                                     center_y = v1_num.unwrap();
                                     center_x = v2_num.unwrap();
+                                    info!("enu: x->{}, y->{}", center_x, center_y);
                                 } else {
                                     error!("parse ENU point error");
                                 }
